@@ -1,6 +1,8 @@
 package cornerstone
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,18 +14,18 @@ type response struct {
 	Result       interface{} `json:"result,omitempty"`
 }
 
-func DoneWithStatus(c *gin.Context, status int, result interface{}) {
+func DoneWithStatus(c *gin.Context, result interface{}) {
 	resp := response{
 		Result: result,
 	}
-	c.AbortWithStatusJSON(status, resp)
+	c.AbortWithStatusJSON(http.StatusOK, resp)
 }
 
-func FromCodeErrorWithStatus(c *gin.Context, status int, err CodeError) {
+func FromCodeErrorWithStatus(c *gin.Context, err CodeError) {
 	resp := response{
 		ErrorCode:    err.ErrorCode(),
 		SubErrorCode: err.SubErrorCode(),
 		ErrorMessage: err.ErrorMessage(),
 	}
-	c.AbortWithStatusJSON(status, resp)
+	c.AbortWithStatusJSON(http.StatusInternalServerError, resp)
 }
